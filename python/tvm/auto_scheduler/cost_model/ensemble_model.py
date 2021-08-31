@@ -56,10 +56,8 @@ class EnsembleModel(PythonBasedModel):
                         LGBModelInternal(few_shot_learning=few_shot_learning,
                                       verbose_eval=verbose_eval,
                                       seed=seed),
-                        TabNetModelInternal(few_shot_learning=few_shot_learning),
-                        MLPModelInternal(few_shot_learning=few_shot_learning)
                     ]
-        self.names = ["_XGB", "_LGBM", "_TabNet", "_MLP"]
+        self.names = ["_XGB", "_LGBM"]
         self.dataset = Dataset()
         self.mode = mode
 
@@ -125,10 +123,8 @@ class EnsembleModel(PythonBasedModel):
         if self.models is None:
             self.models = [ XGBModelInternal(),
                             LGBModelInternal(),
-                            TabNetModelInternal(),
-                            MLPModelInternal()
                         ]
-            self.names = ["_XGB", "_LGBM", "_TabNet", "_MLP"]
+            self.names = ["_XGB", "_LGBM"]
         
         for i, name in zip(range(len(self.models)), self.names):
             self.models[i].load(file_name + name)

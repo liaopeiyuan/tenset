@@ -31,7 +31,7 @@ import pickle
 import numpy as np
 
 from .search_policy import SearchPolicy, SketchPolicy, PreloadMeasuredStates
-from .cost_model import RandomModel, XGBModel, MLPModel, LGBModel, TabNetModel
+from .cost_model import RandomModel, XGBModel, MLPModel, LGBModel, TabNetModel, EnsembleModel
 from .utils import array_mean
 from .measure import ProgramMeasurer, EmptyBuilder, EmptyRunner
 from .measure_record import RecordReader
@@ -129,6 +129,19 @@ def make_search_policies(
             if model_type == 'lgbm-no-update':
                 disable_cost_model_update = True
             cost_model = LGBModel(
+                num_warmup_sample=len(tasks) * num_measures_per_round,
+                disable_update=disable_cost_model_update,
+            )
+            if load_model_file and os.path.isfile(load_model_file):
+                logger.info("TaskScheduler: Load pretrained model...")
+                cost_model.load(load_model_file)
+            elif load_log_file:
+                logger.info("TaskScheduler: Reload measured states and train the model...")
+                cost_model.update_from_file(load_log_file)
+        elif model_type in ['ensemble', 'emsemble-no-update']:
+            if model_type == 'ensemble':
+                disable_cost_model_update = True
+            cost_model = EnsembleModel(
                 num_warmup_sample=len(tasks) * num_measures_per_round,
                 disable_update=disable_cost_model_update,
             )
