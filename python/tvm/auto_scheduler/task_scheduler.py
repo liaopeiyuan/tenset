@@ -139,7 +139,7 @@ def make_search_policies(
                 logger.info("TaskScheduler: Reload measured states and train the model...")
                 cost_model.update_from_file(load_log_file)
         elif model_type in ['ensemble', 'ensemble-no-update']:
-            if model_type == 'ensemble':
+            if model_type == 'ensemble-no-update':
                 disable_cost_model_update = True
             cost_model = EnsembleModel(
                 num_warmup_sample=len(tasks) * num_measures_per_round,
