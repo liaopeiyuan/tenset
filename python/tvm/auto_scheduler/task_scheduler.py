@@ -138,7 +138,7 @@ def make_search_policies(
             elif load_log_file:
                 logger.info("TaskScheduler: Reload measured states and train the model...")
                 cost_model.update_from_file(load_log_file)
-        elif model_type in ['ensemble', 'emsemble-no-update']:
+        elif model_type in ['ensemble', 'ensemble-no-update']:
             if model_type == 'ensemble':
                 disable_cost_model_update = True
             cost_model = EnsembleModel(
